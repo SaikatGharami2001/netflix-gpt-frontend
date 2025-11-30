@@ -7,6 +7,7 @@ export const ValidateLogin = (email, password) => {
     password
   );
 
+  if (!isEmailValid || !isPasswordValid) return "Enter all fields";
   if (!isEmailValid) return "Email format is invalid";
   if (!isPasswordValid)
     return "Password must be 8+ chars, include uppercase, lowercase & number";

@@ -9,6 +9,7 @@ const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
   const [errorHiding, setErrorHiding] = useState(false);
+  const [successMessage, setSuccessMessage] = useState(null);
 
   // INPUT REFS
   const firstName = useRef(null);
@@ -18,7 +19,7 @@ const Signup = () => {
   const email = useRef(null);
   const password = useRef(null);
 
-  // 🔥 Show Slide-In + Fade-Out Error
+  // Show slide-in + fade-out error
   const showError = (msg) => {
     setErrorMessage(msg);
     setErrorHiding(false);
@@ -28,6 +29,16 @@ const Signup = () => {
       setErrorMessage(null);
       setErrorHiding(false);
     }, 2700);
+  };
+
+  // Show green success + redirect
+  const showSuccess = (msg) => {
+    setSuccessMessage(msg);
+
+    setTimeout(() => {
+      setSuccessMessage(null);
+      navigate("/");
+    }, 1800);
   };
 
   const handleSignupClick = () => {
@@ -45,7 +56,11 @@ const Signup = () => {
       return;
     }
 
-    console.log("Signup successful");
+    showSuccess("Signup successful! Redirecting to login...");
+
+    setTimeout(() => {
+      navigate("/login");
+    }, 2000);
   };
 
   return (
@@ -92,65 +107,50 @@ const Signup = () => {
               ref={firstName}
               type="text"
               placeholder="First Name"
-              className="w-full p-4 bg-white/20 rounded-lg 
-                         placeholder-gray-300 outline-none
-                         focus:ring-2 focus:ring-red-600 hover:bg-white/30"
+              className="w-full p-4 bg-white/20 rounded-lg placeholder-gray-300 outline-none focus:ring-2 focus:ring-red-600 hover:bg-white/30"
             />
 
             <input
               ref={lastName}
               type="text"
               placeholder="Last Name"
-              className="w-full p-4 bg-white/20 rounded-lg 
-                         placeholder-gray-300 outline-none
-                         focus:ring-2 focus:ring-red-600 hover:bg-white/30"
+              className="w-full p-4 bg-white/20 rounded-lg placeholder-gray-300 outline-none focus:ring-2 focus:ring-red-600 hover:bg-white/30"
             />
 
             <input
-              min={18}
-              max={90}
               ref={age}
               type="number"
+              min={18}
+              max={90}
               placeholder="Age"
-              className="w-full p-4 bg-white/20 rounded-lg 
-                         placeholder-gray-300 outline-none
-                         focus:ring-2 focus:ring-red-600 hover:bg-white/30"
+              className="w-full p-4 bg-white/20 rounded-lg placeholder-gray-300 outline-none focus:ring-2 focus:ring-red-600 hover:bg-white/30"
             />
 
             <input
               ref={gender}
               type="text"
               placeholder="Gender"
-              className="w-full p-4 bg-white/20 rounded-lg 
-                         placeholder-gray-300 outline-none
-                         focus:ring-2 focus:ring-red-600 hover:bg-white/30"
+              className="w-full p-4 bg-white/20 rounded-lg placeholder-gray-300 outline-none focus:ring-2 focus:ring-red-600 hover:bg-white/30"
             />
 
             <input
               ref={email}
               type="email"
               placeholder="Email"
-              className="w-full p-4 bg-white/20 rounded-lg 
-                         placeholder-gray-300 outline-none
-                         focus:ring-2 focus:ring-red-600 hover:bg-white/30"
+              className="w-full p-4 bg-white/20 rounded-lg placeholder-gray-300 outline-none focus:ring-2 focus:ring-red-600 hover:bg-white/30"
             />
 
-            {/* PASSWORD FIELD */}
+            {/* PASSWORD */}
             <div className="relative">
               <input
                 ref={password}
                 type={showPassword ? "text" : "password"}
                 placeholder="Password"
-                className="w-full p-4 bg-white/20 rounded-lg 
-                           placeholder-gray-300 outline-none
-                           focus:ring-2 focus:ring-red-600 hover:bg-white/30 pr-14"
+                className="w-full p-4 bg-white/20 rounded-lg placeholder-gray-300 outline-none focus:ring-2 focus:ring-red-600 hover:bg-white/30 pr-14"
               />
-
               <span
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-4 top-1/2 -translate-y-1/2 
-                           cursor-pointer text-sm text-gray-200 
-                           hover:text-white transition"
+                className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer text-sm text-gray-200 hover:text-white"
               >
                 {showPassword ? "Hide" : "Show"}
               </span>
@@ -168,6 +168,19 @@ const Signup = () => {
                 `}
               >
                 {errorMessage}
+              </div>
+            )}
+
+            {/* SUCCESS MESSAGE */}
+            {successMessage && (
+              <div
+                className="
+                  bg-green-600/40 border border-green-500/60 
+                  text-green-200 text-sm font-semibold p-3 rounded-lg
+                  backdrop-blur-md shadow-lg animate-errorSlide
+                "
+              >
+                {successMessage}
               </div>
             )}
 

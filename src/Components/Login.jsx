@@ -15,7 +15,7 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   const handleButtonClick = () => {
-    const error = ValidateForm(email.current.value, password.current.value);
+    const error = ValidateLogin(email.current.value, password.current.value);
 
     if (error) {
       setErrorMessage(error);
