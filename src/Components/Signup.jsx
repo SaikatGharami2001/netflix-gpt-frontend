@@ -1,11 +1,52 @@
-import { useState } from "react";
-
+import { useRef, useState } from "react";
 import Navbar from "./Navbar";
 import { useNavigate } from "react-router-dom";
+import { ValidateSignup } from "../utils/ValidateSignup";
 
 const Signup = () => {
-  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [errorHiding, setErrorHiding] = useState(false);
+
+  // INPUT REFS
+  const firstName = useRef(null);
+  const lastName = useRef(null);
+  const age = useRef(null);
+  const gender = useRef(null);
+  const email = useRef(null);
+  const password = useRef(null);
+
+  // 🔥 Show Slide-In + Fade-Out Error
+  const showError = (msg) => {
+    setErrorMessage(msg);
+    setErrorHiding(false);
+
+    setTimeout(() => setErrorHiding(true), 2300);
+    setTimeout(() => {
+      setErrorMessage(null);
+      setErrorHiding(false);
+    }, 2700);
+  };
+
+  const handleSignupClick = () => {
+    const error = ValidateSignup(
+      firstName.current.value,
+      lastName.current.value,
+      age.current.value,
+      gender.current.value,
+      email.current.value,
+      password.current.value
+    );
+
+    if (error) {
+      showError(error);
+      return;
+    }
+
+    console.log("Signup successful");
+  };
 
   return (
     <div className="relative h-screen w-full overflow-hidden text-white">
@@ -17,19 +58,16 @@ const Signup = () => {
           alt=""
         />
 
-        {/* DARK GRADIENT */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/40 to-black/90 pointer-events-none"></div>
-
-        {/* RED TINT */}
-        <div className="absolute inset-0 bg-red-500/10 mix-blend-screen pointer-events-none"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/40 to-black/90"></div>
+        <div className="absolute inset-0 bg-red-500/10 mix-blend-screen"></div>
       </div>
 
-      {/* NAVBAR ALWAYS CLICKABLE */}
+      {/* NAVBAR */}
       <div className="relative z-50">
         <Navbar />
       </div>
 
-      {/* CENTERED SIGNUP CARD */}
+      {/* CENTER CARD */}
       <div className="absolute inset-0 flex items-center justify-center px-4">
         <div
           className="relative w-[450px] max-w-full
@@ -40,86 +78,112 @@ const Signup = () => {
                      hover:scale-[1.03] hover:shadow-[0_0_65px_rgba(255,0,0,0.45)]
                      animate-float"
         >
-          {/* LIGHT SWEEP */}
           <div className="pointer-events-none absolute inset-0 overflow-hidden rounded-2xl">
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent transform -skew-x-12 animate-lightSweep"></div>
           </div>
 
-          {/* TITLE */}
           <h1 className="text-4xl font-extrabold mb-8 tracking-wide drop-shadow-xl text-center">
             Create Account
           </h1>
 
           {/* FORM */}
           <form onSubmit={(e) => e.preventDefault()} className="space-y-5">
-            {/* FIRST NAME */}
             <input
+              ref={firstName}
               type="text"
               placeholder="First Name"
-              className="w-full p-4 bg-white/20 rounded-lg placeholder-gray-300 outline-none focus:ring-2 focus:ring-red-600 hover:bg-white/30 transition-all duration-300"
+              className="w-full p-4 bg-white/20 rounded-lg 
+                         placeholder-gray-300 outline-none
+                         focus:ring-2 focus:ring-red-600 hover:bg-white/30"
             />
 
-            {/* LAST NAME */}
             <input
+              ref={lastName}
               type="text"
               placeholder="Last Name"
-              className="w-full p-4 bg-white/20 rounded-lg placeholder-gray-300 outline-none focus:ring-2 focus:ring-red-600 hover:bg-white/30 transition-all duration-300"
+              className="w-full p-4 bg-white/20 rounded-lg 
+                         placeholder-gray-300 outline-none
+                         focus:ring-2 focus:ring-red-600 hover:bg-white/30"
             />
 
-            {/* AGE */}
             <input
+              min={18}
+              max={90}
+              ref={age}
               type="number"
               placeholder="Age"
-              className="w-full p-4 bg-white/20 rounded-lg placeholder-gray-300 outline-none focus:ring-2 focus:ring-red-600 hover:bg-white/30 transition-all duration-300"
+              className="w-full p-4 bg-white/20 rounded-lg 
+                         placeholder-gray-300 outline-none
+                         focus:ring-2 focus:ring-red-600 hover:bg-white/30"
             />
 
-            {/* GENDER */}
             <input
+              ref={gender}
               type="text"
               placeholder="Gender"
-              className="w-full p-4 bg-white/20 rounded-lg placeholder-gray-300 outline-none focus:ring-2 focus:ring-red-600 hover:bg-white/30 transition-all duration-300"
+              className="w-full p-4 bg-white/20 rounded-lg 
+                         placeholder-gray-300 outline-none
+                         focus:ring-2 focus:ring-red-600 hover:bg-white/30"
             />
 
-            {/* EMAIL */}
             <input
+              ref={email}
               type="email"
               placeholder="Email"
-              className="w-full p-4 bg-white/20 rounded-lg placeholder-gray-300 outline-none focus:ring-2 focus:ring-red-600 hover:bg-white/30 transition-all duration-300"
+              className="w-full p-4 bg-white/20 rounded-lg 
+                         placeholder-gray-300 outline-none
+                         focus:ring-2 focus:ring-red-600 hover:bg-white/30"
             />
 
-            {/* PASSWORD WITH SHOW/HIDE */}
+            {/* PASSWORD FIELD */}
             <div className="relative">
               <input
+                ref={password}
                 type={showPassword ? "text" : "password"}
                 placeholder="Password"
-                className="w-full p-4 bg-white/20 rounded-lg placeholder-gray-300 outline-none focus:ring-2 focus:ring-red-600 hover:bg-white/30 transition-all duration-300 pr-14"
+                className="w-full p-4 bg-white/20 rounded-lg 
+                           placeholder-gray-300 outline-none
+                           focus:ring-2 focus:ring-red-600 hover:bg-white/30 pr-14"
               />
 
-              {/* SHOW/HIDE BUTTON */}
-              <button
-                type="button"
-                onClick={() => setShowPassword((prev) => !prev)}
-                className="
-                  absolute right-4 top-1/2 -translate-y-1/2
-                  text-gray-300 hover:text-white
-                  transition-all duration-300
-                  cursor-pointer select-none text-sm
-                "
+              <span
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-4 top-1/2 -translate-y-1/2 
+                           cursor-pointer text-sm text-gray-200 
+                           hover:text-white transition"
               >
                 {showPassword ? "Hide" : "Show"}
-              </button>
+              </span>
             </div>
 
-            {/* SIGNUP BUTTON */}
+            {/* ERROR MESSAGE */}
+            {errorMessage && (
+              <div
+                className={`
+                  bg-red-600/40 border border-red-500/60 
+                  text-white text-sm font-semibold p-3 rounded-lg
+                  backdrop-blur-md shadow-lg animate-errorSlide
+                  transition-all duration-500
+                  ${errorHiding ? "error-fade-out" : ""}
+                `}
+              >
+                {errorMessage}
+              </div>
+            )}
+
             <button
-              className="w-full py-3 text-lg font-semibold rounded-lg bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 shadow-[0_8px_30px_rgba(255,0,0,0.5)] hover:shadow-[0_8px_45px_rgba(255,0,0,0.7)] transition-all duration-300"
-              type="submit"
+              onClick={handleSignupClick}
+              className="w-full py-3 text-lg font-semibold rounded-lg 
+                         bg-gradient-to-r from-red-600 to-red-700
+                         hover:from-red-700 hover:to-red-800
+                         shadow-[0_8px_30px_rgba(255,0,0,0.5)]
+                         hover:shadow-[0_8px_45px_rgba(255,0,0,0.7)]
+                         transition-all"
             >
               Sign Up
             </button>
           </form>
 
-          {/* SWITCH TO LOGIN */}
           <p className="mt-6 text-gray-300 text-sm text-center">
             Already have an account?{" "}
             <span
@@ -168,6 +232,18 @@ const Signup = () => {
           100% { transform: translateX(200%) skewX(-12deg); }
         }
         .animate-lightSweep { animation: lightSweep 4s infinite linear; }
+
+        @keyframes errorSlide {
+          0% { opacity: 0; transform: translateY(-10px); }
+          100% { opacity: 1; transform: translateY(0); }
+        }
+        .animate-errorSlide { animation: errorSlide 0.4s ease-out; }
+
+        @keyframes errorFadeOut {
+          0% { opacity: 1; transform: translateY(0); }
+          100% { opacity: 0; transform: translateY(-10px); }
+        }
+        .error-fade-out { animation: errorFadeOut 0.4s ease-out forwards; }
 
         @keyframes particleMove {
           0% { transform: translateY(0); opacity: 0.8; }
